@@ -1,5 +1,7 @@
 # Taleb 🤖
 
+## Version v0.0.1
+
 Taleb is named after Nassim Nicholas Taleb, whose work on uncertainty, risk, and complex systems inspired a new way of understanding financial markets. In that spirit, Taleb is an autonomous financial research agent designed to think critically, plan strategically, and learn continuously as it analyzes real-time market data. It transforms complex financial questions into transparent, step-by-step investigations—emulating how an expert analyst works, but powered by advanced AI.
 
 Built specifically for financial research, Taleb merges task planning, self-reflection, and live data streams into a seamless workflow. It is more than an assistant—it is a self-driven researcher that aims to bring clarity in an uncertain market environment.
