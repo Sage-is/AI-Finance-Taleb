@@ -1,0 +1,35 @@
+# This file makes the directory a Python package from typing_extensions import Callable
+from typing_extensions import Callable
+from taleb.tools.finance.filings import get_filings
+from taleb.tools.finance.filings import get_10K_filing_items
+from taleb.tools.finance.filings import get_10Q_filing_items
+from taleb.tools.finance.filings import get_8K_filing_items
+from taleb.tools.finance.fundamentals import get_income_statements
+from taleb.tools.finance.fundamentals import get_balance_sheets
+from taleb.tools.finance.fundamentals import get_cash_flow_statements
+from taleb.tools.finance.metrics import get_financial_metrics_snapshot
+from taleb.tools.finance.metrics import get_financial_metrics
+from taleb.tools.finance.prices import get_price_snapshot
+from taleb.tools.finance.prices import get_prices
+from taleb.tools.finance.news import get_news
+from taleb.tools.finance.estimates import get_analyst_estimates
+from taleb.tools.finance.segments import get_segmented_revenues
+from taleb.tools.search.google import search_google_news
+
+TOOLS: list[Callable[..., any]] = [
+    get_income_statements,
+    get_balance_sheets,
+    get_cash_flow_statements,
+    get_10K_filing_items,
+    get_10Q_filing_items,
+    get_8K_filing_items,
+    get_filings,
+    get_price_snapshot,
+    get_prices,
+    get_financial_metrics_snapshot,
+    get_financial_metrics,
+    get_news,
+    get_analyst_estimates,
+    get_segmented_revenues,
+    search_google_news,
+]
