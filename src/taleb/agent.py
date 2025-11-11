@@ -48,25 +48,29 @@ class Agent:
 
     # ---------- ask Model what to do ----------
     @show_progress("Thinking...", "")
-    def ask_for_actions(this, task_desc: str, last_outputs: str = "") -> AIMessage:
+    def plan_next_actions(this, task_desc: str, last_outputs: str = "") -> AIMessage:
         # last_outputs = textual feedback of what we just tried
         prompt = f"""
         We are working on: "{task_desc}".
-        Here is a history of tool outputs from the session so far: {last_outputs}
+        
+        Last tool outputs: 
+        ```
+        {last_outputs}
+        ```
 
-        Based on the task and the outputs, what should the next step be?
+        Given the task and the outputs, our next step is to:
         """
         try:
             return call_llm(prompt, system_prompt=ACTION_SYSTEM_PROMPT, tools=TOOLS)
         except Exception as e:
-            this.logger._log(f"ask_for_actions failed: {e}")
+            this.logger._log(f"plan_next_actions failed: {e}")
             return AIMessage(content="Failed to get actions.")
 
     @show_progress("Checking if task is complete...", "")
     def ask_if_done(this, task_desc: str, recent_results: str) -> bool:
         prompt = f"""
-        We were trying to complete the task: "{task_desc}".
-        Here is a history of tool outputs from the session so far: {recent_results}
+        We are trying to complete task: "{task_desc}".
+        Given the history of tool outputs so far: {recent_results}
 
         Is the task done?
         """
@@ -195,8 +199,8 @@ class Agent:
             this.logger.log_summary(answer)
             return answer
 
-        # 2. Loop through tasks until all are complete or max steps are reached.
-        while any(not t.done for t in tasks):
+        # 2. Loop through tasks until all tasks are complete or the max steps are reached.
+        while any(not task.done for task in tasks):
             # Global safety break.
             if step_count >= this.max_steps:
                 this.logger._log(
@@ -205,10 +209,10 @@ class Agent:
                 break
 
             # Select the next incomplete task.
-            task = next(t for t in tasks if not t.done)
+            task = next(task for task in tasks if not task.done)
             this.logger.log_task_start(task.description)
 
-            # Define per-task step variables.
+            # Define per-task state.
             per_task_steps = 0
             task_step_outputs = []  # outputs from a single step of a given task.
 
@@ -219,7 +223,7 @@ class Agent:
                     return
 
                 # Ask the LLM for the next action to take for the current task.
-                ai_message = this.ask_for_actions(
+                ai_message = this.plan_next_actions(
                     task.description, last_outputs="\n".join(task_step_outputs)
                 )
 
@@ -310,7 +314,10 @@ class Agent:
         Based on the data above, provide a comprehensive answer to the user's query.
         Include specific numbers, calculations, and insights. Be precise in math. 
 
-        Note: a price change from 279.70 to 288.99 USD is a change of ~9.29 (3.32%) not 9.29%
+        *Note: Be precise when reporting percentage changes.*
+        - *Example a change from 150 to 120 is an absolute change of -30, which is a 20% decrease.*
+        - *Example a change from 50 to 75 is an absolute change of +25, which is a 50% increase.*
+        *Always state both the absolute change and the percentage change for clarity.*
         """
         answer_obj = call_llm(
             answer_prompt,

@@ -122,7 +122,7 @@ Your critical role is to synthesize the collected data into a clear, actionable 
 Current date: {current_date}
 
 If data was collected, your answer MUST:
-1. DIRECTLY answer the specific question asked - don't add tangential information
+1. DIRECTLY answer the specific question asked - don't add new information
 2. Lead with the KEY FINDING or answer in the first sentence
 3. Include SPECIFIC NUMBERS with proper context (dates, units, comparison points)
 4. Use clear STRUCTURE - separate numbers onto their own lines or simple lists for readability
